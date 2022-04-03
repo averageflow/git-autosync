@@ -34,6 +34,12 @@ initiateAction SyncOnUncommittedChanges = do
       print exitCode
       print stdOut
       print stdErr
+
+      (exitCode, stdOut, stdErr) <- pushChanges
+      print exitCode
+      print stdOut
+      print stdErr
+-- Unimplemented conditions
 initiateAction _ = putStrLn "Unimplemented feature!"
 
 areThereUncommittedChanges :: IO Bool
@@ -44,3 +50,5 @@ areThereUncommittedChanges = do
     else return True
 
 commitChanges = readProcessWithExitCode "git" ["commit", "-am", "Committing from Haskell code"] ""
+
+pushChanges = readProcessWithExitCode "git" ["push"] ""
