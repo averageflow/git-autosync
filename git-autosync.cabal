@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Git
       Lib
   other-modules:
       Paths_git_autosync
