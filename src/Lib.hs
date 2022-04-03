@@ -3,6 +3,8 @@ module Lib
   )
 where
 
+import Data.Time.Calendar
+import Data.Time.Clock
 import GHC.Base (IO (IO))
 import GHC.IO.Exception (ExitCode (ExitFailure, ExitSuccess))
 import System.Process (readProcessWithExitCode)
@@ -10,6 +12,9 @@ import System.Process (readProcessWithExitCode)
 data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
 
 cheapSeparator = "+-------------------------------------------------+"
+
+date :: IO (Integer, Int, Int) -- :: (year,month,day)
+date = getCurrentTime >>= return . toGregorian . utctDay
 
 gitAutoSynchronizer = do
   putStrLn cheapSeparator
@@ -49,6 +54,8 @@ areThereUncommittedChanges = do
     then return False
     else return True
 
-commitChanges = readProcessWithExitCode "git" ["commit", "-am", "Committing from Haskell code"] ""
+commitMessage = "This is a programmatic commit, made with Haskell code, on "
+
+commitChanges = readProcessWithExitCode "git" ["commit", "-am", commitMessage] ""
 
 pushChanges = readProcessWithExitCode "git" ["push"] ""
