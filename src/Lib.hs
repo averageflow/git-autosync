@@ -7,8 +7,10 @@ import Git (areThereUncommittedChanges, commitChanges, pushChanges)
 
 data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
 
+cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
 
+gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
   putStrLn cheapSeparator
   putStrLn "Initiating gitAutoSynchronizer"
@@ -20,6 +22,7 @@ gitAutoSynchronizer = do
   putStrLn "All actions completed successfully"
   putStrLn cheapSeparator
 
+initiateAction :: AutoSynchronizerActionTrigger -> IO ()
 initiateAction SyncOnUncommittedChanges = do
   shouldProceedToSync <- areThereUncommittedChanges
   -- print shouldProceedToSync
