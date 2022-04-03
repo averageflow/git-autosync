@@ -3,7 +3,7 @@ module Lib
   )
 where
 
-import Git (areThereUncommittedChanges, commitChanges, pushChanges)
+import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
 
 data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
 
@@ -31,11 +31,19 @@ initiateAction SyncOnUncommittedChanges = do
     else do
       putStrLn "There are uncommitted changes in the repo."
       putStrLn "Preparing to sync changes to upstream."
+      putStrLn "Adding all changes to VCS"
+      (exitCode, stdOut, stdErr) <- addAllChanges
+      print exitCode
+      print stdOut
+      print stdErr
+
+      putStrLn "Committing changes"
       (exitCode, stdOut, stdErr) <- commitChanges
       print exitCode
       print stdOut
       print stdErr
 
+      putStrLn "Pushing changes"
       (exitCode, stdOut, stdErr) <- pushChanges
       print exitCode
       print stdOut
