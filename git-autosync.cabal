@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Config
       Git
       Lib
   other-modules:
@@ -35,6 +36,7 @@ library
       base >=4.7 && <5
     , process >=1.6.13.2
     , time >=1.9.3
+    , yaml >=0.11.8.0
   default-language: Haskell2010
 
 executable git-autosync-exe
@@ -49,6 +51,7 @@ executable git-autosync-exe
     , git-autosync
     , process >=1.6.13.2
     , time >=1.9.3
+    , yaml >=0.11.8.0
   default-language: Haskell2010
 
 test-suite git-autosync-test
@@ -64,4 +67,5 @@ test-suite git-autosync-test
     , git-autosync
     , process >=1.6.13.2
     , time >=1.9.3
+    , yaml >=0.11.8.0
   default-language: Haskell2010

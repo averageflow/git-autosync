@@ -1,0 +1,11 @@
+preferences:
+  commit-message:
+    include-date: false
+    message-based-on-changes: false
+    default-message: ""
+    extra-args: []
+  push:
+    enable: true
+    extra-args: []
+  add:
+    add-all-pre-commit: true
