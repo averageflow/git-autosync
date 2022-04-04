@@ -3,7 +3,7 @@ module Lib
   )
 where
 
-import Config (ServiceConfig, ServiceConfigPush (enablePushCommand), getConfig)
+import Config (ServiceConfig (preferences), ServiceConfigCommitMessage (includeDate), ServiceConfigPreferences (commitMessage), ServiceConfigPush (enablePushCommand), getConfig)
 import qualified Data.Maybe
 import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
 import System.Exit
@@ -44,9 +44,10 @@ initiateAction _ = putStrLn "Unimplemented feature!"
 
 beginSync :: ServiceConfig -> IO ()
 beginSync config = do
-  print config
   putStrLn "There are uncommitted changes in the repo."
   putStrLn "Preparing to sync changes to upstream."
+
+  print $ includeDate $ commitMessage $ preferences config
 
   putStrLn "Adding all changes to VCS"
   (exitCode, stdOut, stdErr) <- addAllChanges
