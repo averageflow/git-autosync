@@ -5,7 +5,7 @@ preferences:
     defaultMessage: ""
     argsForCommitCommand: []
   push:
-    enable: true
+    enablePushCommand: true
     argsForPushCommand: []
   add:
     addAllPreCommit: true

@@ -39,7 +39,7 @@ data ServiceConfigAdd = ServiceConfigAdd
   deriving (Show, Generic, ToJSON, FromJSON)
 
 data ServiceConfigPush = ServiceConfigPush
-  { enable :: Bool,
+  { enablePushCommand :: Bool,
     argsForPushCommand :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)

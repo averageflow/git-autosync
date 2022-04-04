@@ -3,7 +3,8 @@ module Lib
   )
 where
 
-import Config (ServiceConfig, getConfig)
+import Config (ServiceConfig, ServiceConfigPush (enablePushCommand), getConfig)
+import qualified Data.Maybe
 import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
 import System.Exit
 
@@ -27,34 +28,40 @@ gitAutoSynchronizer = do
 initiateAction :: AutoSynchronizerActionTrigger -> IO ()
 initiateAction SyncOnUncommittedChanges = do
   maybeParsedConfig <- getConfig
-
   maybe exitFailure print maybeParsedConfig
+
+  let (Just parsedConfig) = maybeParsedConfig
 
   shouldProceedToSync <- areThereUncommittedChanges
 
   -- print shouldProceedToSync
   if not shouldProceedToSync
     then putStrLn "No uncommitted changes. No action will be taken."
-    else do
-      putStrLn "There are uncommitted changes in the repo."
-      putStrLn "Preparing to sync changes to upstream."
-      putStrLn "Adding all changes to VCS"
-      (exitCode, stdOut, stdErr) <- addAllChanges
-      print exitCode
-      print stdOut
-      print stdErr
-
-      putStrLn "Committing changes"
-      (exitCode, stdOut, stdErr) <- commitChanges
-      print exitCode
-      print stdOut
-      print stdErr
-
-      putStrLn "Pushing changes"
-      (exitCode, stdOut, stdErr) <- pushChanges
-      print exitCode
-      print stdOut
-      print stdErr
+    else beginSync parsedConfig
 
 -- Unimplemented conditions
 initiateAction _ = putStrLn "Unimplemented feature!"
+
+beginSync :: ServiceConfig -> IO ()
+beginSync config = do
+  print config
+  putStrLn "There are uncommitted changes in the repo."
+  putStrLn "Preparing to sync changes to upstream."
+
+  putStrLn "Adding all changes to VCS"
+  (exitCode, stdOut, stdErr) <- addAllChanges
+  print exitCode
+  print stdOut
+  print stdErr
+
+  putStrLn "Committing changes"
+  (exitCode, stdOut, stdErr) <- commitChanges
+  print exitCode
+  print stdOut
+  print stdErr
+
+  putStrLn "Pushing changes"
+  (exitCode, stdOut, stdErr) <- pushChanges
+  print exitCode
+  print stdOut
+  print stdErr
