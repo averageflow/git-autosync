@@ -15,15 +15,9 @@ cheapSeparator = "+-------------------------------------------------+"
 
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
-  putStrLn cheapSeparator
-  putStrLn "Initiating gitAutoSynchronizer"
-  putStrLn ""
-
+  putStrLn cheapSeparator >> putStrLn "Initiating gitAutoSynchronizer" >> putStrLn ""
   initiateAction SyncOnUncommittedChanges
-
-  putStrLn ""
-  putStrLn "All actions completed successfully"
-  putStrLn cheapSeparator
+  putStrLn "" >> putStrLn "All actions completed successfully" >> putStrLn cheapSeparator
 
 initiateAction :: AutoSynchronizerActionTrigger -> IO ()
 initiateAction SyncOnUncommittedChanges = do
@@ -51,18 +45,12 @@ beginSync config = do
 
   putStrLn "Adding all changes to VCS"
   (exitCode, stdOut, stdErr) <- addAllChanges
-  print exitCode
-  print stdOut
-  print stdErr
+  print exitCode >> print stdOut >> print stdErr
 
   putStrLn "Committing changes"
   (exitCode, stdOut, stdErr) <- commitChanges
-  print exitCode
-  print stdOut
-  print stdErr
+  print exitCode >> print stdOut >> print stdErr
 
   putStrLn "Pushing changes"
   (exitCode, stdOut, stdErr) <- pushChanges
-  print exitCode
-  print stdOut
-  print stdErr
+  print exitCode >> print stdOut >> print stdErr

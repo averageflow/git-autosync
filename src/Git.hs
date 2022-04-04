@@ -8,8 +8,8 @@ import Text.Printf
 
 areThereUncommittedChanges :: IO Bool
 areThereUncommittedChanges = do
-  (shouldProceedToSync, _, _) <- readProcessWithExitCode "git" ["diff", "--quiet"] ""
-  if shouldProceedToSync == ExitSuccess
+  (exitCode, _, _) <- readProcessWithExitCode "git" ["diff", "--quiet"] ""
+  if exitCode == ExitSuccess
     then return False
     else return True
 
@@ -27,8 +27,7 @@ commitChanges = do
   readProcessWithExitCode "git" ["commit", "-am", generatedCommitMessage] ""
 
 addAllChanges :: IO (ExitCode, String, String)
-addAllChanges = do
-  readProcessWithExitCode "git" ["add", "-A"] ""
+addAllChanges = readProcessWithExitCode "git" ["add", "-A"] ""
 
 pushChanges :: IO (ExitCode, String, String)
 pushChanges = readProcessWithExitCode "git" ["push"] ""
