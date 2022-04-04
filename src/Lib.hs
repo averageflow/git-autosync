@@ -28,9 +28,7 @@ initiateAction :: AutoSynchronizerActionTrigger -> IO ()
 initiateAction SyncOnUncommittedChanges = do
   maybeParsedConfig <- getConfig
 
-  case maybeParsedConfig of
-    Nothing -> exitFailure
-    Just a -> print a
+  maybe exitFailure print maybeParsedConfig
 
   shouldProceedToSync <- areThereUncommittedChanges
 
