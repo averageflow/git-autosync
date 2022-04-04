@@ -15,14 +15,14 @@ import GHC.Generics
 newtype ServiceConfig = ServiceConfig
   { preferences :: ServiceConfigPreferences
   }
-  deriving (Show, Generic, ToYaml, FromYaml, ToJSON, FromJSON)
+  deriving (Show, Generic, ToJSON, FromJSON)
 
 data ServiceConfigPreferences = ServiceConfigPreferences
   { commitMessage :: ServiceConfigCommitMessage,
     push :: ServiceConfigPush,
     add :: ServiceConfigAdd
   }
-  deriving (Show, Generic, ToYaml, FromYaml, ToJSON, FromJSON)
+  deriving (Show, Generic, ToJSON, FromJSON)
 
 data ServiceConfigCommitMessage = ServiceConfigCommitMessage
   { includeDate :: Bool,
@@ -30,19 +30,19 @@ data ServiceConfigCommitMessage = ServiceConfigCommitMessage
     defaultMessage :: String,
     extraArgs :: [String]
   }
-  deriving (Show, Generic, ToYaml, FromYaml, ToJSON, FromJSON)
+  deriving (Show, Generic, ToJSON, FromJSON)
 
 newtype ServiceConfigAdd = ServiceConfigAdd
   { addAllPreCommit :: Bool
   }
-  deriving (Show, Generic, ToYaml, FromYaml, ToJSON, FromJSON)
+  deriving (Show, Generic, ToJSON, FromJSON)
 
 newtype ServiceConfigPush = ServiceConfigPush
   { enable :: Bool
   -- extraArgs :: [String]
   }
-  deriving (Show, Generic, ToYaml, FromYaml, ToJSON, FromJSON)
+  deriving (Show, Generic, ToJSON, FromJSON)
 
+getConfig :: IO (Maybe ServiceConfig)
 getConfig = do
-  parsedConfig <- Data.Yaml.decodeFileThrow ".gitautosync.yaml" :: IO (Maybe ServiceConfig)
-  print parsedConfig
+  Data.Yaml.decodeFileThrow ".gitautosync.yaml" :: IO (Maybe ServiceConfig)

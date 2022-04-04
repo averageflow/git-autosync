@@ -3,8 +3,9 @@ module Lib
   )
 where
 
-import Config (getConfig)
+import Config (ServiceConfig, getConfig)
 import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
+import System.Exit
 
 data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
 
@@ -25,8 +26,14 @@ gitAutoSynchronizer = do
 
 initiateAction :: AutoSynchronizerActionTrigger -> IO ()
 initiateAction SyncOnUncommittedChanges = do
+  maybeParsedConfig <- getConfig
+
+  case maybeParsedConfig of
+    Nothing -> exitFailure
+    Just a -> print a
+
   shouldProceedToSync <- areThereUncommittedChanges
-  getConfig
+
   -- print shouldProceedToSync
   if not shouldProceedToSync
     then putStrLn "No uncommitted changes. No action will be taken."
