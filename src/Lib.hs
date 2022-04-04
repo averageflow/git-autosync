@@ -48,5 +48,6 @@ initiateAction SyncOnUncommittedChanges = do
       print exitCode
       print stdOut
       print stdErr
+
 -- Unimplemented conditions
 initiateAction _ = putStrLn "Unimplemented feature!"
