@@ -28,18 +28,19 @@ data ServiceConfigCommitMessage = ServiceConfigCommitMessage
   { includeDate :: Bool,
     messageBasedOnChanges :: Bool,
     defaultMessage :: String,
-    extraArgs :: [String]
+    argsForCommitCommand :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-newtype ServiceConfigAdd = ServiceConfigAdd
-  { addAllPreCommit :: Bool
+data ServiceConfigAdd = ServiceConfigAdd
+  { addAllPreCommit :: Bool,
+    argsForAddCommand :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-newtype ServiceConfigPush = ServiceConfigPush
-  { enable :: Bool
-  -- extraArgs :: [String]
+data ServiceConfigPush = ServiceConfigPush
+  { enable :: Bool,
+    argsForPushCommand :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 

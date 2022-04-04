@@ -3,9 +3,10 @@ preferences:
     includeDate: false
     messageBasedOnChanges: false
     defaultMessage: ""
-    extraArgs: []
+    argsForCommitCommand: []
   push:
     enable: true
-    extraArgs: []
+    argsForPushCommand: []
   add:
     addAllPreCommit: true
+    argsForAddCommand: []
