@@ -1,12 +1,12 @@
-preferences:
-  commitMessage:
-    includeDate: false
-    messageBasedOnChanges: false
-    defaultMessage: ""
-    argsForCommitCommand: []
-  push:
-    enablePushCommand: true
-    argsForPushCommand: []
-  add:
-    addAllPreCommit: true
-    argsForAddCommand: []
+servicePreferences:
+  commitPreferences:
+    includeDateInCommitMessage: false
+    composeMessageBasedOnChanges: false
+    defaultCommitMessage: ""
+    argsForCommitAction: []
+  pushPreferences:
+    pushToRemoteAfterCommit: true
+    argsForPushAction: []
+  addPreferences:
+    addAllBeforeCommitting: true
+    argsForAddAction: []

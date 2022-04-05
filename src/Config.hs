@@ -13,34 +13,34 @@ import GHC.Base (IO (IO))
 import GHC.Generics
 
 newtype ServiceConfig = ServiceConfig
-  { preferences :: ServiceConfigPreferences
+  { servicePreferences :: ServiceConfigPreferences
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
 data ServiceConfigPreferences = ServiceConfigPreferences
-  { commitMessage :: ServiceConfigCommitMessage,
-    push :: ServiceConfigPush,
-    add :: ServiceConfigAdd
+  { commitPreferences :: ServiceConfigCommitPreferences,
+    pushPreferences :: ServiceConfigPushPreferences,
+    addPreferences :: ServiceConfigAddPreferences
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigCommitMessage = ServiceConfigCommitMessage
-  { includeDate :: Bool,
-    messageBasedOnChanges :: Bool,
-    defaultMessage :: String,
-    argsForCommitCommand :: [String]
+data ServiceConfigCommitPreferences = ServiceConfigCommitMessage
+  { includeDateInCommitMessage :: Bool,
+    composeMessageBasedOnChanges :: Bool,
+    defaultCommitMessage :: String,
+    argsForCommitAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigAdd = ServiceConfigAdd
-  { addAllPreCommit :: Bool,
-    argsForAddCommand :: [String]
+data ServiceConfigAddPreferences = ServiceConfigAdd
+  { addAllBeforeCommitting :: Bool,
+    argsForAddAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigPush = ServiceConfigPush
-  { enablePushCommand :: Bool,
-    argsForPushCommand :: [String]
+data ServiceConfigPushPreferences = ServiceConfigPush
+  { pushToRemoteAfterCommit :: Bool,
+    argsForPushAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 

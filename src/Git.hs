@@ -9,9 +9,9 @@ import Text.Printf
 areThereUncommittedChanges :: IO Bool
 areThereUncommittedChanges = do
   (exitCode, _, _) <- readProcessWithExitCode "git" ["diff", "--quiet"] ""
-  if exitCode == ExitSuccess
-    then return False
-    else return True
+  case exitCode of
+    ExitSuccess -> return False
+    _ -> return True
 
 getCurrentDateTime :: IO String
 getCurrentDateTime = fmap show getZonedTime

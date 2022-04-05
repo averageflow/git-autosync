@@ -3,7 +3,7 @@ module Lib
   )
 where
 
-import Config (ServiceConfig (preferences), ServiceConfigCommitMessage (includeDate), ServiceConfigPreferences (commitMessage), ServiceConfigPush (enablePushCommand), getConfig)
+import Config (ServiceConfig (servicePreferences), ServiceConfigCommitPreferences (includeDateInCommitMessage), ServiceConfigPreferences (commitPreferences), getConfig)
 import qualified Data.Maybe
 import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
 import System.Exit
@@ -41,7 +41,7 @@ beginSync config = do
   putStrLn "There are uncommitted changes in the repo."
   putStrLn "Preparing to sync changes to upstream."
 
-  print $ includeDate $ commitMessage $ preferences config
+  print (includeDateInCommitMessage . commitPreferences . servicePreferences $ config)
 
   putStrLn "Adding all changes to VCS"
   (exitCode, stdOut, stdErr) <- addAllChanges
