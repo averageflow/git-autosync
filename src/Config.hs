@@ -6,11 +6,8 @@ module Config where
 import qualified Data.ByteString
 import qualified Data.Text
 import Data.Text.Encoding (encodeUtf8)
-import Data.Yaml (FromJSON (parseJSON), ToJSON, Value (String), decodeFileThrow)
-import Data.Yaml.Builder (ToYaml)
-import Data.Yaml.Parser (FromYaml)
-import GHC.Base (IO (IO))
-import GHC.Generics
+import Data.Yaml (FromJSON, ToJSON, decodeFileThrow)
+import GHC.Generics (Generic)
 
 newtype ServiceConfig = ServiceConfig
   { servicePreferences :: ServiceConfigPreferences

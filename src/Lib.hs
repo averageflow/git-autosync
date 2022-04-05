@@ -4,9 +4,20 @@ module Lib
 where
 
 import Config
+  ( ServiceConfig (servicePreferences),
+    ServiceConfigAddPreferences (addAllBeforeCommitting),
+    ServiceConfigCommitPreferences (includeDateInCommitMessage),
+    ServiceConfigPreferences (addPreferences, commitPreferences),
+    getConfig,
+  )
 import qualified Data.Maybe
-import Git (addAllChanges, areThereUncommittedChanges, commitChanges, pushChanges)
-import System.Exit
+import Git
+  ( addAllChanges,
+    areThereUncommittedChanges,
+    commitChanges,
+    pushChanges,
+  )
+import System.Exit (exitFailure)
 
 data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
 

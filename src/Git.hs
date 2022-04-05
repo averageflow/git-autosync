@@ -1,11 +1,8 @@
 module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges) where
 
-import Config
 import Data.Time (getZonedTime)
-import GHC.Base (IO (IO))
-import GHC.IO.Exception (ExitCode (ExitFailure, ExitSuccess))
+import GHC.IO.Exception (ExitCode (ExitSuccess))
 import System.Process (readProcessWithExitCode)
-import Text.Printf
 
 areThereUncommittedChanges :: IO Bool
 areThereUncommittedChanges = do
