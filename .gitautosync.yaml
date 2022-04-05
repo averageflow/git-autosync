@@ -1,6 +1,6 @@
 servicePreferences:
   commitPreferences:
-    includeDateInCommitMessage: false
+    includeDateInCommitMessage: true
     composeMessageBasedOnChanges: false
     defaultCommitMessage: ""
     argsForCommitAction: []
