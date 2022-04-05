@@ -18,6 +18,7 @@ areThereUncommittedChanges = do
 getCurrentDateTime :: IO String
 getCurrentDateTime = fmap show getZonedTime
 
+enrichMessageWithDate :: [Char] -> IO [Char]
 enrichMessageWithDate message = do
   dateTime <- getCurrentDateTime
   return $ dateTime ++ " - " ++ message
@@ -32,6 +33,7 @@ commitChanges commitPreferences = do
       performCommit generatedMessage
     else performCommit defaultMessage
 
+performCommit :: String -> IO (ExitCode, String, String)
 performCommit message = readProcessWithExitCode "git" ["commit", "-m", message] ""
 
 addAllChanges :: IO (ExitCode, String, String)
