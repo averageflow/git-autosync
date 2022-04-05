@@ -52,8 +52,6 @@ beginSync config = do
   putStrLn "There are uncommitted changes in the repo."
   putStrLn "Preparing to sync changes to upstream."
 
-  print . includeDateInCommitMessage . commitPreferences . servicePreferences $ config
-
   if addAllBeforeCommitting . addPreferences . servicePreferences $ config
     then do
       putStrLn "Adding all changes to VCS"
@@ -62,7 +60,7 @@ beginSync config = do
     else putStrLn "No additional changes will be added to VCS"
 
   putStrLn "Committing changes"
-  (exitCode, stdOut, stdErr) <- commitChanges
+  (exitCode, stdOut, stdErr) <- commitChanges . commitPreferences . servicePreferences $ config
   print exitCode >> print stdOut >> print stdErr
 
   putStrLn "Pushing changes"
