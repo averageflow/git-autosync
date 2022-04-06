@@ -28,6 +28,7 @@ import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
 
+gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
   putStrLn cheapSeparator >> putStrLn "Initiating gitAutoSynchronizer" >> putStrLn ""
   maybeParsedConfig <- getConfig
@@ -36,6 +37,7 @@ gitAutoSynchronizer = do
     Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
   putStrLn "" >> putStrLn "All actions completed successfully!" >> putStrLn cheapSeparator
 
+beginSync :: ManagedObjectPreferences -> IO ()
 beginSync objectPreferences = do
   putStrLn $ "Navigating to: " ++ location objectPreferences
   setCurrentDirectory $ location objectPreferences
