@@ -20,9 +20,9 @@ import Git
   ( addAllChanges,
     areThereUncommittedChanges,
     commitChanges,
-    navigateToDirectory,
     pushChanges,
   )
+import System.Directory (setCurrentDirectory)
 import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
 cheapSeparator :: String
@@ -38,8 +38,7 @@ gitAutoSynchronizer = do
 
 beginSync objectPreferences = do
   putStrLn $ "Navigating to: " ++ location objectPreferences
-  processOutput <- navigateToDirectory . location $ objectPreferences
-  processOutputHandler processOutput
+  setCurrentDirectory $ location objectPreferences
 
   shouldProceedToSync <- areThereUncommittedChanges
   if shouldProceedToSync

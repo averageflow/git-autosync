@@ -1,4 +1,4 @@
-module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges, navigateToDirectory) where
+module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges) where
 
 import Config
   ( AddPreferences (argsForAddAction),
@@ -59,6 +59,3 @@ pushChanges pushPreferences = do
   if null customArgs
     then readProcessWithExitCode "git" ["push"] ""
     else readProcessWithExitCode "git" ("push" : customArgs) ""
-
-navigateToDirectory :: String -> IO (ExitCode, String, String)
-navigateToDirectory location = readProcessWithExitCode "cd" [location] ""
