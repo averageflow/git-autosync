@@ -54,8 +54,5 @@ addAllChanges addPreferences = do
     else readProcessWithExitCode "git" ("add" : customArgs) ""
 
 pushChanges :: PushPreferences -> IO (ExitCode, String, String)
-pushChanges pushPreferences = do
-  let customArgs = argsForPushAction pushPreferences
-  if null customArgs
-    then readProcessWithExitCode "git" ["push"] ""
-    else readProcessWithExitCode "git" ("push" : customArgs) ""
+pushChanges pushPreferences =
+  readProcessWithExitCode "git" ("push" : argsForPushAction pushPreferences) ""
