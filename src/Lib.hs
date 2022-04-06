@@ -45,26 +45,25 @@ beginSync objectPreferences = do
     then do
       putStrLn "There are uncommitted changes in the repo."
       putStrLn "Preparing to sync changes to upstream."
+      if addAllBeforeCommitting . addPreferences $ objectPreferences
+        then do
+          putStrLn "Adding changes..."
+          processOutput <- addAllChanges . addPreferences $ objectPreferences
+          processOutputHandler processOutput
+        else putStrLn "No additional changes will be added to VCS"
+
+      putStrLn "Committing changes..."
+      processOutput <- commitChanges . commitPreferences $ objectPreferences
+      processOutputHandler processOutput
+
+      if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
+        then do
+          putStrLn "Pushing changes..."
+          processOutput <- pushChanges . pushPreferences $ objectPreferences
+          processOutputHandler processOutput
+        else putStrLn "Will not push to remote due to user's configuration"
     else do
       putStrLn "No uncommitted changes. No action will be taken."
-
-  if addAllBeforeCommitting . addPreferences $ objectPreferences
-    then do
-      putStrLn "Adding changes..."
-      processOutput <- addAllChanges . addPreferences $ objectPreferences
-      processOutputHandler processOutput
-    else putStrLn "No additional changes will be added to VCS"
-
-  putStrLn "Committing changes..."
-  processOutput <- commitChanges . commitPreferences $ objectPreferences
-  processOutputHandler processOutput
-
-  if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
-    then do
-      putStrLn "Pushing changes..."
-      processOutput <- pushChanges . pushPreferences $ objectPreferences
-      processOutputHandler processOutput
-    else putStrLn "Will not push to remote due to user's configuration"
 
 processOutputHandler :: (ExitCode, String, String) -> IO ()
 processOutputHandler processOutput = do
