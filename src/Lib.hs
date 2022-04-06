@@ -55,7 +55,7 @@ beginSync config = do
   if addAllBeforeCommitting . addPreferences . servicePreferences $ config
     then do
       putStrLn "Adding all changes to VCS"
-      (exitCode, stdOut, stdErr) <- addAllChanges
+      (exitCode, stdOut, stdErr) <- addAllChanges . addPreferences . servicePreferences $ config
       print exitCode >> print stdOut >> print stdErr
     else putStrLn "No additional changes will be added to VCS"
 
