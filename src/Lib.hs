@@ -23,7 +23,7 @@ import Git
     navigateToDirectory,
     pushChanges,
   )
-import System.Exit (ExitCode (ExitSuccess), exitFailure)
+import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
@@ -47,6 +47,7 @@ beginSync objectPreferences = do
       putStrLn "Preparing to sync changes to upstream."
     else do
       putStrLn "No uncommitted changes. No action will be taken."
+      exitSuccess
 
   if addAllBeforeCommitting . addPreferences $ objectPreferences
     then do
