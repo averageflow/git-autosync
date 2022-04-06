@@ -2,11 +2,11 @@ servicePreferences:
   commitPreferences:
     includeDateInCommitMessage: true
     composeMessageBasedOnChanges: false
-    defaultCommitMessage: "This is a programmatic commit from Haskell code"
+    defaultCommitMessage: "Programmatic commit from Haskell code"
     argsForCommitAction: []
   pushPreferences:
     pushToRemoteAfterCommit: true
     argsForPushAction: []
   addPreferences:
     addAllBeforeCommitting: true
-    argsForAddAction: ["-A"]
+    argsForAddAction: []
