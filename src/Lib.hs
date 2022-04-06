@@ -4,11 +4,15 @@ module Lib
 where
 
 import Config
-  ( ServiceConfig (servicePreferences),
-    ServiceConfigAddPreferences (addAllBeforeCommitting),
-    ServiceConfigCommitPreferences (includeDateInCommitMessage),
-    ServiceConfigPreferences (addPreferences, commitPreferences, pushPreferences),
-    ServiceConfigPushPreferences (pushToRemoteAfterCommit),
+  ( AddPreferences (addAllBeforeCommitting),
+    ManagedObjectPreferences
+      ( addPreferences,
+        commitPreferences,
+        location,
+        pushPreferences
+      ),
+    PushPreferences (pushToRemoteAfterCommit),
+    ServicePreferences (managedObjects),
     getConfig,
   )
 import qualified Data.Maybe
@@ -16,6 +20,7 @@ import Git
   ( addAllChanges,
     areThereUncommittedChanges,
     commitChanges,
+    navigateToDirectory,
     pushChanges,
   )
 import System.Exit (ExitCode (ExitSuccess), exitFailure)
@@ -23,39 +28,41 @@ import System.Exit (ExitCode (ExitSuccess), exitFailure)
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
 
-gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
   putStrLn cheapSeparator >> putStrLn "Initiating gitAutoSynchronizer" >> putStrLn ""
   maybeParsedConfig <- getConfig
   case maybeParsedConfig of
     Nothing -> exitFailure
-    Just parsedConfig -> do
-      shouldProceedToSync <- areThereUncommittedChanges
-      if shouldProceedToSync
-        then beginSync parsedConfig
-        else putStrLn "No uncommitted changes. No action will be taken."
-  putStrLn "" >> putStrLn "All actions completed successfully" >> putStrLn cheapSeparator
+    Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
+  putStrLn "" >> putStrLn "All actions completed successfully!" >> putStrLn cheapSeparator
 
-beginSync :: ServiceConfig -> IO ()
-beginSync config = do
-  putStrLn "There are uncommitted changes in the repo."
-  putStrLn "Preparing to sync changes to upstream."
+beginSync objectPreferences = do
+  processOutput <- navigateToDirectory . location $ objectPreferences
+  processOutputHandler processOutput
 
-  if addAllBeforeCommitting . addPreferences . servicePreferences $ config
+  shouldProceedToSync <- areThereUncommittedChanges
+  if shouldProceedToSync
+    then do
+      putStrLn "There are uncommitted changes in the repo."
+      putStrLn "Preparing to sync changes to upstream."
+    else do
+      putStrLn "No uncommitted changes. No action will be taken."
+
+  if addAllBeforeCommitting . addPreferences $ objectPreferences
     then do
       putStrLn "Adding changes..."
-      processOutput <- addAllChanges . addPreferences . servicePreferences $ config
+      processOutput <- addAllChanges . addPreferences $ objectPreferences
       processOutputHandler processOutput
     else putStrLn "No additional changes will be added to VCS"
 
   putStrLn "Committing changes..."
-  processOutput <- commitChanges . commitPreferences . servicePreferences $ config
+  processOutput <- commitChanges . commitPreferences $ objectPreferences
   processOutputHandler processOutput
 
-  if pushToRemoteAfterCommit . pushPreferences . servicePreferences $ config
+  if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
     then do
       putStrLn "Pushing changes..."
-      processOutput <- pushChanges . pushPreferences . servicePreferences $ config
+      processOutput <- pushChanges . pushPreferences $ objectPreferences
       processOutputHandler processOutput
     else putStrLn "Will not push to remote due to user's configuration"
 

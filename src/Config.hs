@@ -9,37 +9,38 @@ import Data.Text.Encoding (encodeUtf8)
 import Data.Yaml (FromJSON, ToJSON, decodeFileThrow)
 import GHC.Generics (Generic)
 
-newtype ServiceConfig = ServiceConfig
-  { servicePreferences :: ServiceConfigPreferences
+newtype ServicePreferences = ServicePreferences
+  { managedObjects :: [ManagedObjectPreferences]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigPreferences = ServiceConfigPreferences
-  { commitPreferences :: ServiceConfigCommitPreferences,
-    pushPreferences :: ServiceConfigPushPreferences,
-    addPreferences :: ServiceConfigAddPreferences
+data ManagedObjectPreferences = ManagedObjectPreferences
+  { location :: String,
+    commitPreferences :: CommitPreferences,
+    pushPreferences :: PushPreferences,
+    addPreferences :: AddPreferences
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigCommitPreferences = ServiceConfigCommitMessage
+data CommitPreferences = CommitPreferences
   { includeDateInCommitMessage :: Bool,
     defaultCommitMessage :: String,
     argsForCommitAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigAddPreferences = ServiceConfigAdd
+data AddPreferences = AddPreferences
   { addAllBeforeCommitting :: Bool,
     argsForAddAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-data ServiceConfigPushPreferences = ServiceConfigPush
+data PushPreferences = PushPreferences
   { pushToRemoteAfterCommit :: Bool,
     argsForPushAction :: [String]
   }
   deriving (Show, Generic, ToJSON, FromJSON)
 
-getConfig :: IO (Maybe ServiceConfig)
+getConfig :: IO (Maybe ServicePreferences)
 getConfig = do
-  Data.Yaml.decodeFileThrow ".gitautosync.yaml" :: IO (Maybe ServiceConfig)
+  Data.Yaml.decodeFileThrow ".gitautosync.yaml" :: IO (Maybe ServicePreferences)

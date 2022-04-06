@@ -5,7 +5,9 @@ The concept is to sync from local machine to remote by committing and pushing (o
 The trigger for syncing can be either the existence of uncommitted changes, or (not yet implemented) the diff between current and wanted branch.
 
 
-You can run this project with:
+You can build and run this project with:
 ```
 stack build && stack exec git-autosync-exe
 ```
+
+This project expects a config file named `.gitautosync.yaml` to be present in the directory where the tool is installed.

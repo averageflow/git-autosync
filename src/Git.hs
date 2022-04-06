@@ -1,9 +1,13 @@
-module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges) where
+module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges, navigateToDirectory) where
 
 import Config
-  ( ServiceConfigAddPreferences (argsForAddAction),
-    ServiceConfigCommitPreferences (argsForCommitAction, defaultCommitMessage, includeDateInCommitMessage),
-    ServiceConfigPushPreferences (argsForPushAction),
+  ( AddPreferences (argsForAddAction),
+    CommitPreferences
+      ( argsForCommitAction,
+        defaultCommitMessage,
+        includeDateInCommitMessage
+      ),
+    PushPreferences (argsForPushAction),
   )
 import Data.Time (getZonedTime)
 import GHC.Base (IO (IO))
@@ -25,7 +29,7 @@ enrichMessageWithDate message = do
   dateTime <- getCurrentDateTime
   return $ dateTime ++ " " ++ message
 
-commitChanges :: ServiceConfigCommitPreferences -> IO (ExitCode, String, String)
+commitChanges :: CommitPreferences -> IO (ExitCode, String, String)
 commitChanges commitPreferences = do
   let shouldAddDateToMessage = includeDateInCommitMessage commitPreferences
   let defaultMessage = defaultCommitMessage commitPreferences
@@ -35,23 +39,26 @@ commitChanges commitPreferences = do
       performCommit commitPreferences generatedMessage
     else performCommit commitPreferences defaultMessage
 
-performCommit :: ServiceConfigCommitPreferences -> String -> IO (ExitCode, String, String)
+performCommit :: CommitPreferences -> String -> IO (ExitCode, String, String)
 performCommit commitPreferences message = do
   let customArgs = argsForCommitAction commitPreferences
   if null customArgs
     then readProcessWithExitCode "git" ["commit", "-m", message] ""
     else readProcessWithExitCode "git" ("commit" : customArgs ++ ["-m", message]) ""
 
-addAllChanges :: ServiceConfigAddPreferences -> IO (ExitCode, String, String)
+addAllChanges :: AddPreferences -> IO (ExitCode, String, String)
 addAllChanges addPreferences = do
   let customArgs = argsForAddAction addPreferences
   if null customArgs
     then readProcessWithExitCode "git" ["add", "-A"] ""
     else readProcessWithExitCode "git" ("add" : customArgs) ""
 
-pushChanges :: ServiceConfigPushPreferences -> IO (ExitCode, String, String)
+pushChanges :: PushPreferences -> IO (ExitCode, String, String)
 pushChanges pushPreferences = do
   let customArgs = argsForPushAction pushPreferences
   if null customArgs
     then readProcessWithExitCode "git" ["push"] ""
     else readProcessWithExitCode "git" ("push" : customArgs) ""
+
+navigateToDirectory :: String -> IO (ExitCode, String, String)
+navigateToDirectory location = readProcessWithExitCode "cd" [location] ""
