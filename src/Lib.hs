@@ -18,7 +18,7 @@ import Git
     commitChanges,
     pushChanges,
   )
-import System.Exit (ExitCode, exitFailure)
+import System.Exit (ExitCode (ExitSuccess), exitFailure)
 
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
@@ -44,24 +44,26 @@ beginSync config = do
   if addAllBeforeCommitting . addPreferences . servicePreferences $ config
     then do
       putStrLn "Adding changes..."
-      (exitCode, stdOut, stdErr) <- addAllChanges . addPreferences . servicePreferences $ config
-      print exitCode >> print stdOut >> print stdErr
+      processOutput <- addAllChanges . addPreferences . servicePreferences $ config
+      processPrettyPrinter processOutput
     else putStrLn "No additional changes will be added to VCS"
 
   putStrLn "Committing changes..."
-  (exitCode, stdOut, stdErr) <- commitChanges . commitPreferences . servicePreferences $ config
-  print exitCode >> print stdOut >> print stdErr
+  processOutput <- commitChanges . commitPreferences . servicePreferences $ config
+  processPrettyPrinter processOutput
 
   if pushToRemoteAfterCommit . pushPreferences . servicePreferences $ config
     then do
       putStrLn "Pushing changes..."
       processOutput <- pushChanges . pushPreferences . servicePreferences $ config
-      -- print exitCode >> print stdOut >> print stdErr
-      cliProcessPrettyPrinter processOutput
+      processPrettyPrinter processOutput
     else putStrLn "Will not push to remote due to user's configuration"
 
-cliProcessPrettyPrinter :: (ExitCode, String, String) -> IO ()
-cliProcessPrettyPrinter processOutput = do
-  -- print exitCode >> print stdOut >> print stdErr
+processPrettyPrinter :: (ExitCode, String, String) -> IO ()
+processPrettyPrinter processOutput = do
   let (exitCode, stdOut, stdErr) = processOutput
-  print stdOut
+  case exitCode of
+    ExitSuccess -> do
+      putStrLn stdOut
+    _ -> do
+      putStrLn stdErr
