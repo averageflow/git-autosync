@@ -23,7 +23,6 @@ data ServiceConfigPreferences = ServiceConfigPreferences
 
 data ServiceConfigCommitPreferences = ServiceConfigCommitMessage
   { includeDateInCommitMessage :: Bool,
-    composeMessageBasedOnChanges :: Bool,
     defaultCommitMessage :: String,
     argsForCommitAction :: [String]
   }

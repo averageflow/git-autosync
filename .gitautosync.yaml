@@ -1,7 +1,6 @@
 servicePreferences:
   commitPreferences:
     includeDateInCommitMessage: true
-    composeMessageBasedOnChanges: false
     defaultCommitMessage: "Programmatic commit from Haskell code"
     argsForCommitAction: []
   pushPreferences:

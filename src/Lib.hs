@@ -7,7 +7,8 @@ import Config
   ( ServiceConfig (servicePreferences),
     ServiceConfigAddPreferences (addAllBeforeCommitting),
     ServiceConfigCommitPreferences (includeDateInCommitMessage),
-    ServiceConfigPreferences (addPreferences, commitPreferences),
+    ServiceConfigPreferences (addPreferences, commitPreferences, pushPreferences),
+    ServiceConfigPushPreferences (pushToRemoteAfterCommit),
     getConfig,
   )
 import qualified Data.Maybe
@@ -19,33 +20,21 @@ import Git
   )
 import System.Exit (exitFailure)
 
-data AutoSynchronizerActionTrigger = SyncOnUncommittedChanges | SyncOnDiffWithBranch
-
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
 
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
   putStrLn cheapSeparator >> putStrLn "Initiating gitAutoSynchronizer" >> putStrLn ""
-  initiateAction SyncOnUncommittedChanges
-  putStrLn "" >> putStrLn "All actions completed successfully" >> putStrLn cheapSeparator
-
-initiateAction :: AutoSynchronizerActionTrigger -> IO ()
-initiateAction SyncOnUncommittedChanges = do
   maybeParsedConfig <- getConfig
-  maybe exitFailure print maybeParsedConfig
-
-  let (Just parsedConfig) = maybeParsedConfig
-
-  shouldProceedToSync <- areThereUncommittedChanges
-
-  -- print shouldProceedToSync
-  if not shouldProceedToSync
-    then putStrLn "No uncommitted changes. No action will be taken."
-    else beginSync parsedConfig
-
--- Unimplemented conditions
-initiateAction _ = putStrLn "Unimplemented feature!"
+  case maybeParsedConfig of
+    Nothing -> exitFailure
+    Just parsedConfig -> do
+      shouldProceedToSync <- areThereUncommittedChanges
+      if shouldProceedToSync
+        then beginSync parsedConfig
+        else putStrLn "No uncommitted changes. No action will be taken."
+  putStrLn "" >> putStrLn "All actions completed successfully" >> putStrLn cheapSeparator
 
 beginSync :: ServiceConfig -> IO ()
 beginSync config = do
@@ -54,15 +43,18 @@ beginSync config = do
 
   if addAllBeforeCommitting . addPreferences . servicePreferences $ config
     then do
-      putStrLn "Adding all changes to VCS"
+      putStrLn "Adding changes..."
       (exitCode, stdOut, stdErr) <- addAllChanges . addPreferences . servicePreferences $ config
       print exitCode >> print stdOut >> print stdErr
     else putStrLn "No additional changes will be added to VCS"
 
-  putStrLn "Committing changes"
+  putStrLn "Committing changes..."
   (exitCode, stdOut, stdErr) <- commitChanges . commitPreferences . servicePreferences $ config
   print exitCode >> print stdOut >> print stdErr
 
-  putStrLn "Pushing changes"
-  (exitCode, stdOut, stdErr) <- pushChanges
-  print exitCode >> print stdOut >> print stdErr
+  if pushToRemoteAfterCommit . pushPreferences . servicePreferences $ config
+    then do
+      putStrLn "Pushing changes..."
+      (exitCode, stdOut, stdErr) <- pushChanges . pushPreferences . servicePreferences $ config
+      print exitCode >> print stdOut >> print stdErr
+    else putStrLn "Will not push to remote due to user's configuration"

@@ -3,6 +3,7 @@ module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChange
 import Config
   ( ServiceConfigAddPreferences (argsForAddAction),
     ServiceConfigCommitPreferences (argsForCommitAction, defaultCommitMessage, includeDateInCommitMessage),
+    ServiceConfigPushPreferences (argsForPushAction),
   )
 import Data.Time (getZonedTime)
 import GHC.Base (IO (IO))
@@ -48,5 +49,9 @@ addAllChanges addPreferences = do
     then readProcessWithExitCode "git" ["add", "-A"] ""
     else readProcessWithExitCode "git" ("add" : customArgs) ""
 
-pushChanges :: IO (ExitCode, String, String)
-pushChanges = readProcessWithExitCode "git" ["push"] ""
+pushChanges :: ServiceConfigPushPreferences -> IO (ExitCode, String, String)
+pushChanges pushPreferences = do
+  let customArgs = argsForPushAction pushPreferences
+  if null customArgs
+    then readProcessWithExitCode "git" ["push"] ""
+    else readProcessWithExitCode "git" ("push" : customArgs) ""
