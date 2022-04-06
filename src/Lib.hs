@@ -18,7 +18,7 @@ import Git
     commitChanges,
     pushChanges,
   )
-import System.Exit (exitFailure)
+import System.Exit (ExitCode, exitFailure)
 
 cheapSeparator :: String
 cheapSeparator = "+-------------------------------------------------+"
@@ -55,6 +55,13 @@ beginSync config = do
   if pushToRemoteAfterCommit . pushPreferences . servicePreferences $ config
     then do
       putStrLn "Pushing changes..."
-      (exitCode, stdOut, stdErr) <- pushChanges . pushPreferences . servicePreferences $ config
-      print exitCode >> print stdOut >> print stdErr
+      processOutput <- pushChanges . pushPreferences . servicePreferences $ config
+      -- print exitCode >> print stdOut >> print stdErr
+      cliProcessPrettyPrinter processOutput
     else putStrLn "Will not push to remote due to user's configuration"
+
+cliProcessPrettyPrinter :: (ExitCode, String, String) -> IO ()
+cliProcessPrettyPrinter processOutput = do
+  -- print exitCode >> print stdOut >> print stdErr
+  let (exitCode, stdOut, stdErr) = processOutput
+  print stdOut
