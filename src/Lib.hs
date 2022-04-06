@@ -37,6 +37,7 @@ gitAutoSynchronizer = do
   putStrLn "" >> putStrLn "All actions completed successfully!" >> putStrLn cheapSeparator
 
 beginSync objectPreferences = do
+  putStrLn $ "Navigating to: " ++ location objectPreferences
   processOutput <- navigateToDirectory . location $ objectPreferences
   processOutputHandler processOutput
 
