@@ -1,13 +1,19 @@
 module ConsolePrinter where
 
+red = "\ESC[31m"
+
+green = "\ESC[32m"
+
+cyan = "\ESC[36m"
+
 fancyPrint :: String -> IO ()
-fancyPrint message = putStrLn $ "\ESC[31m" ++ message
+fancyPrint message = putStrLn $ message
 
 errorPrint :: String -> IO ()
-errorPrint message = putStrLn message
+errorPrint message = putStrLn $ red ++ message
 
 successPrint :: String -> IO ()
-successPrint message = putStrLn message
+successPrint message = putStrLn $ green ++ message
 
 fancySeparatorPrint :: IO ()
 fancySeparatorPrint = putStrLn "+-------------------------------------------------+"
