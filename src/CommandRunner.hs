@@ -9,7 +9,7 @@ runSystemCommand cmd args = do
   (exitCode, stdOut, stdErr) <- readProcessWithExitCode cmd args ""
   case exitCode of
     ExitSuccess -> do
-      successPrint stdOut
+      fancyPrint stdOut
     _ -> do
       errorPrint stdErr
       errorPrint "Aborting operation! Please see the above errors!"
