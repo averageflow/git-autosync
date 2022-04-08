@@ -9,7 +9,7 @@ cyan = "\ESC[36m"
 white = "\ESC[37m"
 
 fancyPrint :: String -> IO ()
-fancyPrint message = putStrLn $ message
+fancyPrint message = putStrLn $ white ++ message
 
 errorPrint :: String -> IO ()
 errorPrint message = putStrLn $ red ++ message
