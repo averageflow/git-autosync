@@ -16,7 +16,7 @@ managedObjects:
   - location: /home/joe/Development/Personal/git-autosync
     commitPreferences:
       includeDateInCommitMessage: true
-      defaultCommitMessage: "Programmatic commit from Haskell code, so this project commits and pushes itself"
+      defaultCommitMessage: "λ Commit from Haskell code, so this project commits and pushes itself"
       argsForCommitAction: []
     pushPreferences:
       pushToRemoteAfterCommit: true
@@ -28,7 +28,7 @@ managedObjects:
   - location: /home/joe/Documents/KnowledgeBase
     commitPreferences:
       includeDateInCommitMessage: false
-      defaultCommitMessage: "Programmatic commit from Haskell code, updating my Knowledge Base"
+      defaultCommitMessage: "λ Commit from Haskell code, updating my Knowledge Base"
       argsForCommitAction: []
     pushPreferences:
       pushToRemoteAfterCommit: true
