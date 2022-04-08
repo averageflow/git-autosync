@@ -37,7 +37,7 @@ gitAutoSynchronizer = do
 
 beginSync objectPreferences = do
   fancyPrint ""
-  fancyPrint $ "STARTING TASKS FOR OBJECT AT: " ++ location objectPreferences
+  cyanPrint $ "STARTING TASKS FOR OBJECT AT: " ++ location objectPreferences
   setCurrentDirectory $ location objectPreferences
 
   shouldProceedToSync <- areThereUncommittedChanges
