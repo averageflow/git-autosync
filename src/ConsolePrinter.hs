@@ -30,4 +30,4 @@ successPrint :: String -> IO ()
 successPrint message = putStrLn $ green ++ message
 
 fancySeparatorPrint :: IO ()
-fancySeparatorPrint = putStrLn $ cyan ++ "+-------------------------------------------------+"
+fancySeparatorPrint = putStrLn $ cyan ++ "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>"
