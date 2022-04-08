@@ -35,9 +35,9 @@ gitAutoSynchronizer = do
     Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
   fancyPrint "" >> cyanPrint "TASKS COMPLETED SUCCESSFULLY!" >> fancySeparatorPrint
 
-beginSync :: ManagedObjectPreferences -> IO ()
 beginSync objectPreferences = do
-  fancyPrint $ "Navigating to: " ++ location objectPreferences
+  fancyPrint ""
+  fancyPrint $ "STARTING TASKS FOR OBJECT AT: " ++ location objectPreferences
   setCurrentDirectory $ location objectPreferences
 
   shouldProceedToSync <- areThereUncommittedChanges
