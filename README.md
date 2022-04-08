@@ -39,3 +39,12 @@ managedObjects:
 ```
 
 Note: absolute paths are highly recommended!
+
+## Installing to a Unix system
+
+To install this to your Unix system, build the tool with `stack build --test --copy-bins`. Take note of the mentioned path.
+For me the binary was copied to `/home/joe/.local/bin/git-autosync-exe`. I made sure that this folder is in my `PATH` and now I can call the tool from anywhere.
+
+Next I simply create a `.gitautosync.yaml` in my home folder, and I can use `git-autosync-exe` command from home folder now.
+If running in a cron, make sure to change your working directory to where the `.gitautosync.yaml` file is located.
+
