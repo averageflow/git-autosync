@@ -4,6 +4,12 @@ A humble effort to create a helpful tool that will keep git repositories up to d
 The concept is to sync from local machine to remote by committing and pushing (optionally pulling first WIP). This could then easily be added to a cron job for automation.
 The trigger for syncing is the existence of uncommitted changes.
 
+This project has one purpose: to be a tool that can be installed to a Unix system, configurable with YAML, that can add, commit and push from several local repositories to remotes.
+
+For example I have a knowledge base of markdown documents that I like to have synced to a private GitHub repo, and for that I had a little shell script doing it.
+
+Then the idea arose in my head to create something more powerful and configurable that could do this for multiple repos. Of course I love Haskell and want to learn more, and I thought this might be a good way to roll up my sleeves and absorb a lot of knowledge in practice.
+
 You can build and run this project with:
 ```
 stack build && stack exec git-autosync-exe
