@@ -43,24 +43,24 @@ beginSync objectPreferences = do
   shouldProceedToSync <- areThereUncommittedChanges
   if shouldProceedToSync
     then do
-      fancyPrint "There are uncommitted changes in the repo."
-      fancyPrint "Preparing to sync changes to upstream."
+      fancyPrint' "THERE ARE UNCOMMITTED CHANGES IN THE REPO."
+      fancyPrint "PREPARING TO SYNC CHANGES TO UPSTREAM..."
       if addAllBeforeCommitting . addPreferences $ objectPreferences
         then do
-          fancyPrint' "Adding changes..."
+          fancyPrint' "ADDING CHANGES..."
           addFileContentsToIndex . addPreferences $ objectPreferences
           successPrint "ADDED CHANGES SUCCESSFULLY!"
-        else fancyPrint "No additional changes will be added to VCS"
+        else fancyPrint "NO ADDITIONAL CHANGES WILL BE ADDED TO VCS"
 
-      fancyPrint' "Committing changes..."
+      fancyPrint' "COMMITTING CHANGES..."
       commitChanges . commitPreferences $ objectPreferences
       successPrint "COMMITTED CHANGES SUCCESSFULLY!"
 
       if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
         then do
-          fancyPrint' "Pushing changes..."
+          fancyPrint' "PUSHING CHANGES..."
           updateRemoteRefs . pushPreferences $ objectPreferences
           successPrint "PUSHED CHANGES SUCCESSFULLY!"
-        else fancyPrint "Will not push to remote due to user's configuration"
+        else fancyPrint "WILL NOT PUSH TO REMOTE DUE TO USER'S CONFIGURATION"
     else do
-      successPrint "No uncommitted changes. No action will be taken."
+      successPrint "NO UNCOMMITTED CHANGES. NO ACTION WILL BE TAKEN"
