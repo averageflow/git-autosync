@@ -48,3 +48,21 @@ For me the binary was copied to `/home/joe/.local/bin/git-autosync-exe`. I made 
 Next I simply create a `.gitautosync.yaml` in my home folder, and I can use `git-autosync-exe` command from home folder now.
 If running in a cron, make sure to change your working directory to where the `.gitautosync.yaml` file is located.
 
+I created a crontab for my user with `crontab -e`: 
+
+```sh
+SHELL=/usr/bin/zsh
+PATH=/home/joe/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/home/joe/bin
+MAILTO=joe
+HOME=/home/joe
+# For details see man 4 crontabs
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# | .------------- hour (0 - 23)
+# | | .---------- day of month (1 - 31)
+# | | | .------- month (1 - 12) OR jan,feb,mar,apr ...
+# | | | | .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# | | | | |
+# * * * * * user-name command to be executed
+  1 * * * * joe git-autosync-exe
+```
