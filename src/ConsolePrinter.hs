@@ -1,7 +1,7 @@
 module ConsolePrinter where
 
 fancyPrint :: String -> IO ()
-fancyPrint message = putStrLn $ "\ESC[31mred" ++ message
+fancyPrint message = putStrLn $ "\ESC[31m" ++ message
 
 errorPrint :: String -> IO ()
 errorPrint message = putStrLn message
