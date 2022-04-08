@@ -28,16 +28,16 @@ import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
-  fancySeparatorPrint >> cyanPrint "STARTING GIT-AUTOSYNC" >> fancyPrint ""
+  fancySeparatorPrint >> cyanPrint "λ STARTING GIT-AUTOSYNC" >> fancyPrint ""
   maybeParsedConfig <- getConfig
   case maybeParsedConfig of
     Nothing -> exitFailure
     Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
-  fancyPrint "" >> cyanPrint "TASKS COMPLETED SUCCESSFULLY!" >> fancySeparatorPrint
+  fancyPrint "" >> cyanPrint "λ TASKS COMPLETED SUCCESSFULLY!" >> fancySeparatorPrint
 
 beginSync objectPreferences = do
   fancyPrint ""
-  cyanPrint $ "STARTING TASKS FOR OBJECT AT: " ++ location objectPreferences
+  cyanPrint $ "λ STARTING TASKS FOR OBJECT AT: " ++ location objectPreferences
   setCurrentDirectory $ location objectPreferences
 
   shouldProceedToSync <- areThereUncommittedChanges
