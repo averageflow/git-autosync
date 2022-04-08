@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      CommandRunner
       Config
+      ConsolePrinter
       Git
       Lib
   other-modules:

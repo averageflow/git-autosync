@@ -1,5 +1,6 @@
-module Git (areThereUncommittedChanges, commitChanges, pushChanges, addAllChanges) where
+module Git (areThereUncommittedChanges, commitChanges, updateRemoteRefs, addFileContentsToIndex) where
 
+import CommandRunner (runSystemCommand)
 import Config
   ( AddPreferences (argsForAddAction),
     CommitPreferences
@@ -10,7 +11,6 @@ import Config
     PushPreferences (argsForPushAction),
   )
 import Data.Time (getZonedTime)
-import GHC.Base (IO (IO))
 import GHC.IO.Exception (ExitCode (ExitSuccess))
 import System.Process (readProcessWithExitCode)
 
@@ -29,30 +29,34 @@ enrichMessageWithDate message = do
   dateTime <- getCurrentDateTime
   return $ dateTime ++ " " ++ message
 
-commitChanges :: CommitPreferences -> IO (ExitCode, String, String)
+commitChanges :: CommitPreferences -> IO ()
 commitChanges commitPreferences = do
   let shouldAddDateToMessage = includeDateInCommitMessage commitPreferences
   let defaultMessage = defaultCommitMessage commitPreferences
   if shouldAddDateToMessage
     then do
       generatedMessage <- enrichMessageWithDate defaultMessage
-      performCommit commitPreferences generatedMessage
-    else performCommit commitPreferences defaultMessage
+      recordChangesToRepository commitPreferences generatedMessage
+    else recordChangesToRepository commitPreferences defaultMessage
 
-performCommit :: CommitPreferences -> String -> IO (ExitCode, String, String)
-performCommit commitPreferences message = do
+-- Record changes to the repository
+recordChangesToRepository :: CommitPreferences -> String -> IO ()
+recordChangesToRepository commitPreferences message = do
   let customArgs = argsForCommitAction commitPreferences
   if null customArgs
-    then readProcessWithExitCode "git" ["commit", "-m", message] ""
-    else readProcessWithExitCode "git" ("commit" : customArgs ++ ["-m", message]) ""
+    then runSystemCommand "git" ["commit", "-m", message]
+    else runSystemCommand "git" ("commit" : customArgs ++ ["-m", message])
 
-addAllChanges :: AddPreferences -> IO (ExitCode, String, String)
-addAllChanges addPreferences = do
+-- Add file contents to the index
+addFileContentsToIndex :: AddPreferences -> IO ()
+addFileContentsToIndex addPreferences = do
   let customArgs = argsForAddAction addPreferences
   if null customArgs
-    then readProcessWithExitCode "git" ["add", "-A"] ""
-    else readProcessWithExitCode "git" ("add" : customArgs) ""
+    then -- add all by default
+      runSystemCommand "git" ["add", "-A"]
+    else -- use custom args from .yaml file
+      runSystemCommand "git" ("add" : customArgs)
 
-pushChanges :: PushPreferences -> IO (ExitCode, String, String)
-pushChanges pushPreferences =
-  readProcessWithExitCode "git" ("push" : argsForPushAction pushPreferences) ""
+-- Update remote refs along with associated objects
+updateRemoteRefs :: PushPreferences -> IO ()
+updateRemoteRefs pushPreferences = runSystemCommand "git" ("push" : argsForPushAction pushPreferences)

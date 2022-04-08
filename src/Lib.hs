@@ -15,65 +15,49 @@ import Config
     ServicePreferences (managedObjects),
     getConfig,
   )
+import ConsolePrinter (fancyPrint, fancySeparatorPrint)
 import qualified Data.Maybe
 import Git
-  ( addAllChanges,
+  ( addFileContentsToIndex,
     areThereUncommittedChanges,
     commitChanges,
-    pushChanges,
+    updateRemoteRefs,
   )
 import System.Directory (setCurrentDirectory)
 import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
-cheapSeparator :: String
-cheapSeparator = "+-------------------------------------------------+"
-
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
-  putStrLn cheapSeparator >> putStrLn "Initiating gitAutoSynchronizer" >> putStrLn ""
+  fancySeparatorPrint >> fancyPrint "Initiating gitAutoSynchronizer" >> fancyPrint ""
   maybeParsedConfig <- getConfig
   case maybeParsedConfig of
     Nothing -> exitFailure
     Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
-  putStrLn "" >> putStrLn "All actions completed successfully!" >> putStrLn cheapSeparator
+  fancyPrint "" >> fancyPrint "All actions completed successfully!" >> fancySeparatorPrint
 
 beginSync :: ManagedObjectPreferences -> IO ()
 beginSync objectPreferences = do
-  putStrLn $ "Navigating to: " ++ location objectPreferences
+  fancyPrint $ "Navigating to: " ++ location objectPreferences
   setCurrentDirectory $ location objectPreferences
 
   shouldProceedToSync <- areThereUncommittedChanges
   if shouldProceedToSync
     then do
-      putStrLn "There are uncommitted changes in the repo."
-      putStrLn "Preparing to sync changes to upstream."
+      fancyPrint "There are uncommitted changes in the repo."
+      fancyPrint "Preparing to sync changes to upstream."
       if addAllBeforeCommitting . addPreferences $ objectPreferences
         then do
-          putStrLn "Adding changes..."
-          processOutput <- addAllChanges . addPreferences $ objectPreferences
-          processOutputHandler processOutput
-        else putStrLn "No additional changes will be added to VCS"
+          fancyPrint "Adding changes..."
+          addFileContentsToIndex . addPreferences $ objectPreferences
+        else fancyPrint "No additional changes will be added to VCS"
 
-      putStrLn "Committing changes..."
-      processOutput <- commitChanges . commitPreferences $ objectPreferences
-      processOutputHandler processOutput
+      fancyPrint "Committing changes..."
+      commitChanges . commitPreferences $ objectPreferences
 
       if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
         then do
-          putStrLn "Pushing changes..."
-          processOutput <- pushChanges . pushPreferences $ objectPreferences
-          processOutputHandler processOutput
-        else putStrLn "Will not push to remote due to user's configuration"
+          fancyPrint "Pushing changes..."
+          updateRemoteRefs . pushPreferences $ objectPreferences
+        else fancyPrint "Will not push to remote due to user's configuration"
     else do
-      putStrLn "No uncommitted changes. No action will be taken."
-
-processOutputHandler :: (ExitCode, String, String) -> IO ()
-processOutputHandler processOutput = do
-  let (exitCode, stdOut, stdErr) = processOutput
-  case exitCode of
-    ExitSuccess -> do
-      putStrLn stdOut
-    _ -> do
-      putStrLn stdErr
-      putStrLn "Aborting operation! Please see the above errors!"
-      exitFailure
+      fancyPrint "No uncommitted changes. No action will be taken."
