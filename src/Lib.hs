@@ -49,18 +49,18 @@ beginSync objectPreferences = do
         then do
           fancyPrint' "Adding changes..."
           addFileContentsToIndex . addPreferences $ objectPreferences
-          successPrint "Added changes successfully"
+          successPrint "ADDED CHANGES SUCCESSFULLY!"
         else fancyPrint "No additional changes will be added to VCS"
 
       fancyPrint' "Committing changes..."
       commitChanges . commitPreferences $ objectPreferences
-      successPrint "Committed changes successfully!"
+      successPrint "COMMITTED CHANGES SUCCESSFULLY!"
 
       if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
         then do
           fancyPrint' "Pushing changes..."
           updateRemoteRefs . pushPreferences $ objectPreferences
-          successPrint "Pushed changes successfully!"
+          successPrint "PUSHED CHANGES SUCCESSFULLY!"
         else fancyPrint "Will not push to remote due to user's configuration"
     else do
       successPrint "No uncommitted changes. No action will be taken."
