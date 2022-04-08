@@ -15,6 +15,11 @@ white = "\ESC[37m"
 fancyPrint :: String -> IO ()
 fancyPrint message = putStrLn $ white ++ message
 
+fancyPrint' :: String -> IO ()
+fancyPrint' message = do
+  putStrLn ""
+  fancyPrint message
+
 cyanPrint :: String -> IO ()
 cyanPrint message = putStrLn $ cyan ++ message
 

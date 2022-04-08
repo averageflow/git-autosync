@@ -15,7 +15,7 @@ import Config
     ServicePreferences (managedObjects),
     getConfig,
   )
-import ConsolePrinter (cyanPrint, fancyPrint, fancySeparatorPrint, successPrint)
+import ConsolePrinter (cyanPrint, fancyPrint, fancyPrint', fancySeparatorPrint, successPrint)
 import qualified Data.Maybe
 import Git
   ( addFileContentsToIndex,
@@ -47,18 +47,18 @@ beginSync objectPreferences = do
       fancyPrint "Preparing to sync changes to upstream."
       if addAllBeforeCommitting . addPreferences $ objectPreferences
         then do
-          fancyPrint "Adding changes..."
+          fancyPrint' "Adding changes..."
           addFileContentsToIndex . addPreferences $ objectPreferences
           successPrint "Added changes successfully"
         else fancyPrint "No additional changes will be added to VCS"
 
-      fancyPrint "" >> fancyPrint "Committing changes..."
+      fancyPrint' "Committing changes..."
       commitChanges . commitPreferences $ objectPreferences
       successPrint "Committed changes successfully!"
 
       if pushToRemoteAfterCommit . pushPreferences $ objectPreferences
         then do
-          fancyPrint "" >> fancyPrint "Pushing changes..."
+          fancyPrint' "Pushing changes..."
           updateRemoteRefs . pushPreferences $ objectPreferences
           successPrint "Pushed changes successfully!"
         else fancyPrint "Will not push to remote due to user's configuration"
