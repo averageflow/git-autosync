@@ -6,6 +6,8 @@ green = "\ESC[32m"
 
 cyan = "\ESC[36m"
 
+white = "\ESC[37m"
+
 fancyPrint :: String -> IO ()
 fancyPrint message = putStrLn $ message
 

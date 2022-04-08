@@ -28,8 +28,7 @@ import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
-  fancySeparatorPrint
-  fancyPrint "Initiating gitAutoSynchronizer" >> fancyPrint ""
+  fancySeparatorPrint >> fancyPrint "Initiating gitAutoSynchronizer" >> fancyPrint ""
   maybeParsedConfig <- getConfig
   case maybeParsedConfig of
     Nothing -> exitFailure
