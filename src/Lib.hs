@@ -15,7 +15,7 @@ import Config
     ServicePreferences (managedObjects),
     getConfig,
   )
-import ConsolePrinter (fancyPrint, fancySeparatorPrint, successPrint)
+import ConsolePrinter (cyanPrint, fancyPrint, fancySeparatorPrint, successPrint)
 import qualified Data.Maybe
 import Git
   ( addFileContentsToIndex,
@@ -28,12 +28,12 @@ import System.Exit (ExitCode (ExitSuccess), exitFailure, exitSuccess)
 
 gitAutoSynchronizer :: IO ()
 gitAutoSynchronizer = do
-  fancySeparatorPrint >> fancyPrint "STARTING GIT-AUTOSYNC" >> fancyPrint ""
+  fancySeparatorPrint >> cyanPrint "STARTING GIT-AUTOSYNC" >> fancyPrint ""
   maybeParsedConfig <- getConfig
   case maybeParsedConfig of
     Nothing -> exitFailure
     Just parsedConfig -> mapM_ beginSync $ managedObjects parsedConfig
-  fancyPrint "" >> fancyPrint "TASKS COMPLETED SUCCESSFULLY!" >> fancySeparatorPrint
+  fancyPrint "" >> cyanPrint "TASKS COMPLETED SUCCESSFULLY!" >> fancySeparatorPrint
 
 beginSync :: ManagedObjectPreferences -> IO ()
 beginSync objectPreferences = do
