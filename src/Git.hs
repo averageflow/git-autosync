@@ -4,7 +4,8 @@ import CommandRunner (runSystemCommand)
 import Config
   ( AddPreferences (argsForAddAction),
     CommitPreferences
-      ( argsForCommitAction,
+      ( CommitPreferences,
+        argsForCommitAction,
         defaultCommitMessage,
         includeDateInCommitMessage
       ),
@@ -30,19 +31,17 @@ enrichMessageWithDate message = do
   return $ dateTime ++ " " ++ message
 
 commitChanges :: CommitPreferences -> IO ()
-commitChanges commitPreferences = do
-  let shouldAddDateToMessage = includeDateInCommitMessage commitPreferences
-  let defaultMessage = defaultCommitMessage commitPreferences
-  if shouldAddDateToMessage
-    then do
-      generatedMessage <- enrichMessageWithDate defaultMessage
-      recordChangesToRepository commitPreferences generatedMessage
-    else recordChangesToRepository commitPreferences defaultMessage
+commitChanges (CommitPreferences includeDateInCommitMessage defaultCommitMessage commitArgs) = do
+  msg <- makeMessage
+  recordChangesToRepository commitArgs msg
+  where
+    makeMessage
+      | includeDateInCommitMessage = enrichMessageWithDate defaultCommitMessage
+      | otherwise = pure defaultCommitMessage
 
 -- Record changes to the repository
-recordChangesToRepository :: CommitPreferences -> String -> IO ()
-recordChangesToRepository commitPreferences message = do
-  let customArgs = argsForCommitAction commitPreferences
+recordChangesToRepository :: [String] -> String -> IO ()
+recordChangesToRepository customArgs message = do
   if null customArgs
     then runSystemCommand "git" ["commit", "-m", message]
     else runSystemCommand "git" ("commit" : customArgs ++ ["-m", message])
@@ -51,11 +50,8 @@ recordChangesToRepository commitPreferences message = do
 addFileContentsToIndex :: AddPreferences -> IO ()
 addFileContentsToIndex addPreferences = do
   let customArgs = argsForAddAction addPreferences
-  if null customArgs
-    then -- add all by default
-      runSystemCommand "git" ["add", "-A"]
-    else -- use custom args from .yaml file
-      runSystemCommand "git" ("add" : customArgs)
+  let args = if null customArgs then ["-A"] else customArgs
+  runSystemCommand "git" ("add" : args)
 
 -- Update remote refs along with associated objects
 updateRemoteRefs :: PushPreferences -> IO ()
