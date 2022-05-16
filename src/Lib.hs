@@ -3,7 +3,8 @@ module Lib
   )
 where
 
-import Config
+import qualified Data.Maybe
+import GitAutoSync.Config
   ( AddPreferences (addAllBeforeCommitting),
     ManagedObjectPreferences
       ( addPreferences,
@@ -15,9 +16,8 @@ import Config
     ServicePreferences (managedObjects),
     getConfig,
   )
-import ConsolePrinter (cyanPrint, fancyPrint, fancyPrint', fancySeparatorPrint, successPrint)
-import qualified Data.Maybe
-import Git
+import GitAutoSync.ConsolePrinter (cyanPrint, fancyPrint, fancyPrint', fancySeparatorPrint, successPrint)
+import GitAutoSync.Git
   ( addFileContentsToIndex,
     areThereUncommittedChanges,
     commitChanges,
