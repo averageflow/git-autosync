@@ -48,8 +48,9 @@ Note: absolute paths are highly recommended!
 
 ## Installing to a Unix system
 
-To install this to your Unix system, build the tool with `stack build --test --copy-bins`. Take note of the mentioned path.
-For me the binary was copied to `/home/joe/.local/bin/git-autosync-exe`. I made sure that this folder is in my `PATH` and now I can call the tool from anywhere.
+To install this to your Unix system, build the tool with `cabal build`. You should have a new binary at `dist-newstyle/build/<your os, for me x86_64-linux>/ghc-8.10.7/git-autosync-0.1.0.0/x/git-autosync/build/git-autosync/git-autosync`.
+
+For me I copied the binary to `/home/joe/.local/bin/git-autosync-exe`. I made sure that this folder is in my `PATH` and now I can call the tool from anywhere.
 
 Next I simply create a `.gitautosync.yaml` in my home folder, and I can use `git-autosync-exe` command from home folder now.
 If running in a cron, make sure to change your working directory to where the `.gitautosync.yaml` file is located.
