@@ -1,6 +1,6 @@
 module GitAutoSync.CommandRunner where
 
-import ConsolePrinter (errorPrint, fancyPrint, successPrint)
+import GitAutoSync.ConsolePrinter (errorPrint, fancyPrint, successPrint)
 import System.Exit (ExitCode (ExitSuccess), exitFailure)
 import System.Process (readProcessWithExitCode)
 
