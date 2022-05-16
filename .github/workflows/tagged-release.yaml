@@ -1,0 +1,62 @@
+---
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create-release:
+    name: "Create Release"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+
+  pre-release:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        include:
+          - os: ubuntu-latest
+            RELEASE_TARGET_NAME: "Linux"
+            BUILD_OUTPUT_FOLDER: "x86_64-linux"
+          - os: macos-latest
+            RELEASE_TARGET_NAME: "macOS"
+            BUILD_OUTPUT_FOLDER: "x86_64-osx"
+
+    env:
+      GHC_VERSION: "8.10.7"
+      CABAL_VERSION: "3.6.2.0"
+
+    name: "Release for ${{ matrix.RELEASE_TARGET_NAME }}"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: haskell/actions/setup@v2
+        with:
+          ghc-version: "${{ env.GHC_VERSION }}"
+          cabal-version: "${{ env.CABAL_VERSION }}"
+
+      - name: Freeze Cabal plan
+        run: cabal freeze
+
+      - name: "Build & test"
+        run: |
+          cabal build
+          mv dist-newstyle/build/${{ matrix.BUILD_OUTPUT_FOLDER }}/ghc-${{ env.GHC_VERSION }}/git-autosync-0.1.0.0/x/git-autosync/build/git-autosync/git-autosync git-autosync-${{ matrix.os }}
+      - name: "Upload binaries to release"
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ github.ref_name }}"
+          files: git-autosync-${{ matrix.os }}
