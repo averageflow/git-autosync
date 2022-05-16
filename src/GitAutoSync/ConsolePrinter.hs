@@ -1,4 +1,4 @@
-module ConsolePrinter where
+module GitAutoSync.ConsolePrinter where
 
 red :: String
 red = "\ESC[31m"

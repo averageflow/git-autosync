@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module Config where
+module GitAutoSync.Config where
 
 import qualified Data.ByteString
 import qualified Data.Text

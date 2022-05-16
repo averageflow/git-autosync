@@ -1,7 +1,9 @@
-module Git (areThereUncommittedChanges, commitChanges, updateRemoteRefs, addFileContentsToIndex) where
+module GitAutoSync.Git (areThereUncommittedChanges, commitChanges, updateRemoteRefs, addFileContentsToIndex) where
 
-import CommandRunner (runSystemCommand)
-import Config
+import Data.Time (getZonedTime)
+import GHC.IO.Exception (ExitCode (ExitSuccess))
+import GitAutoSync.CommandRunner (runSystemCommand)
+import GitAutoSync.Config
   ( AddPreferences (argsForAddAction),
     CommitPreferences
       ( CommitPreferences,
@@ -11,8 +13,6 @@ import Config
       ),
     PushPreferences (argsForPushAction),
   )
-import Data.Time (getZonedTime)
-import GHC.IO.Exception (ExitCode (ExitSuccess))
 import System.Process (readProcessWithExitCode)
 
 areThereUncommittedChanges :: IO Bool
