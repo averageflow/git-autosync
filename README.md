@@ -1,5 +1,8 @@
 # git-autosync
 
+![Haskell](https://img.shields.io/badge/Haskell-purple?style=for-the-badge&logo=haskell&logoColor=white)
+![Cabal](https://img.shields.io/badge/Cabal-blue?style=for-the-badge&logo=haskell&logoColor=white)
+
 A humble effort to create a helpful tool that will keep git repositories up to date with your remotes, in a very customizable fashion, with YAML config.
 The concept is to sync from local machine to remote by committing and pushing (optionally pulling first WIP). This could then easily be added to a cron job for automation.
 The trigger for syncing is the existence of uncommitted changes.
