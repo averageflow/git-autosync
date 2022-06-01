@@ -48,15 +48,33 @@ jobs:
           ghc-version: "${{ env.GHC_VERSION }}"
           cabal-version: "${{ env.CABAL_VERSION }}"
 
-      - name: Freeze Cabal plan
-        run: cabal freeze
+      - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cabal/packages
+            ~/.cabal/store
+            dist-newstyle/cache
+            dist-newstyle/packagedb
+            dist-newstyle/tmp
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.ghc }}-
 
       - name: "Build & test"
         run: |
           cabal build
           mv dist-newstyle/build/${{ matrix.BUILD_OUTPUT_FOLDER }}/ghc-${{ env.GHC_VERSION }}/git-autosync-0.1.0.0/x/git-autosync/build/git-autosync/git-autosync git-autosync-${{ matrix.os }}
+      
+      - name: "Package"
+        run: |
+          mkdir git-autosync
+          cp LICENSE git-autosync/
+          cp README.md git-autosync/
+          cp git-autosync-${{ matrix.os }} git-autosync/
+          tar cvf git-autosync-${{ matrix.os }}.tar.gz ./git-autosync
+      
       - name: "Upload binaries to release"
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "${{ github.ref_name }}"
-          files: git-autosync-${{ matrix.os }}
+          files: git-autosync-${{ matrix.os }}.tar.gz
